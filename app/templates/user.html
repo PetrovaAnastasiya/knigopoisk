@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+    <table>
+        <tr valign="top">
+            <td><img src="{{ user.avatar(128) }}"></td>
+            <td>
+                {% if user.type == 0 %} <h5 style="color: blue;">Пользователь</h5> {% endif %}
+                {% if user.type == 1 %} <h5 style="color: red;">Администратор</h5> {% endif %}
+                {% if user.type == 2 %} <h5 style="color: red;">Главный администратор</h5> {% endif %}
+                <h1>Имя: {{ user.username }}</h1>
+                {% if user.about_me %}<p>{{ user.about_me }}</p>{% endif %}
+                {% if user.last_seen %}<p>Последний вход: {{ user.last_seen.strftime('%d.%m.%Y - %H:%M:%S') }}</p>{% endif %}
+                <p>{{ user.favourite.count() }} в избранном</p>
+                {% if user == current_user %}
+                    <p><a href="{{ url_for('edit_profile') }}">Редактировать профиль</a></p>
+                {% endif %}
+            </td>
+            <td>
+                {% if current_user.type == 2 and user.type == 0 %}
+                    <p><a href="{{ url_for('add_admin', username=user.username) }}">Сделать администратором</a></p>
+                {% elif current_user.type == 2 and user.type == 1 %}
+                    <p><a href="{{ url_for('remove_admin', username=user.username) }}">Убрать из администраторов</a></p>
+                {% endif %}
+            </td>
+        </tr>
+    </table>
+        <hr>
+    <table>
+        <tr>
+            <h4>Отзывы пользователя</h4>
+            {% for feedback in user.feedback %}
+                <table>
+                    <tr class ="row" valign="top">
+                        <td><img src="{{ feedback.author.avatar(64) }}"></td>
+                        <td>Книга: {% if feedback.book == None %} {{ feedback.book_title_reserved }} {% else %} <a href="{{ url_for('book', ISBN=feedback.book.ISBN) }}">{{ feedback.book.title }}</a> {% endif %}
+                            <br> Оценка: {{ feedback.rate }} <br> {% if current_user.type != 0 %} <a href="{{ url_for('remove_feedback', id=feedback.id, next=request.path) }}">Удалить</a> {% endif %}</td>
+                    </tr>
+                    <tr class ="row">
+                        <td>{{ feedback.timestamp.strftime('%d.%m.%Y - %H:%M:%S')}}</td>
+                    </tr>
+                    <tr class ="row" valign="top">
+                        <td>{{ feedback.body }}</td>
+                    </tr>
+                    <br>
+                </table>
+            {% endfor %}
+        </tr>
+    </table>
+{% endblock %}

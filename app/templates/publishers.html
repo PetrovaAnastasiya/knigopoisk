@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+    <h1>Издательства:</h1>
+    {% for publisher in publishers %}
+    <div><p>
+        <a href="{{ url_for('publisher', name=publisher.name) }}">{{ publisher.name }}</a>
+    </p></div>
+    {% endfor %}
+{% endblock %}

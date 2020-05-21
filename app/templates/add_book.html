@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+    <h1>Добавить книгу</h1>
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.title.label }}<br>
+            {{ form.title(size=32) }}<br>
+            {% for error in form.title.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.image.label }}<br>
+            {{ form.image(cols=50, rows=4) }}<br>
+            {% for error in form.image.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.description.label }}<br>
+            {{ form.description(cols=50, rows=4) }}<br>
+            {% for error in form.description.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.authors.label }}<br>
+            {{ form.authors(size=10, multiple="multiple") }}<br>
+            {% for error in form.authors.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.genres.label }}<br>
+            {{ form.genres(size=10, multiple="multiple") }}<br>
+            {% for error in form.genres.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.edition.label }}<br>
+            {{ form.edition(size=10, multiple="multiple") }}<br>
+            {% for error in form.edition.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <div class="control-group">
+            <div class="controls">
+                <input class="btn btn-primary" type="submit" value="Отправить">
+            </div>
+        </div>
+        <script>
+        $('#authors-select').multiSelect();
+        $('#genres-select').multiSelect();
+        $('#edition-select').multiSelect();
+        </script>
+    </form>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+    <h1>Книги:</h1>
+    {% for book in books %}
+    <div><p>
+        {{ book.authors.first().name }}
+        <br>
+        <a href="{{ url_for('book', ISBN=book.ISBN) }}">{{ book.title }}</a>
+    </p></div>
+    {% endfor %}
+{% endblock %}

@@ -1,0 +1,9 @@
+<table>
+    <tr valign="top">
+        <td></td>
+        <td>
+            {% if book.authors != None %}<a href="{{ url_for('author', name=book.authors.first().name) }}">{{ book.authors.first().name}}</a> / {% endif %}
+            <a href="{{ url_for('book', ISBN=book.ISBN) }}">{{ book.title }}</a>
+        </td>
+    </tr>
+</table>

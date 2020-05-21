@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+    <tr>
+        <table>
+            <tr valign="top" >
+                <td>
+                    {% if book.image %}
+                        <img src="{{ book.image }}">
+                    {% else %}
+                        <img src="https://i.ibb.co/1LFV1xz/image.png" alt="i" border="0">
+                    {% endif %}
+                </td>
+                <td>
+                    <h3> |
+                        {% for author in book.authors %}
+                            <a href="{{ url_for('author', name=author.name) }}">{{ author.name }}</a>
+                            |
+                        {% endfor %}
+                    </h3>
+                    <h5> |
+                        {% for genre in book.genres %}
+                            <a href="{{ url_for('genre', name=genre.name) }}">{{ genre.name }}</a>
+                            |
+                        {% endfor %}
+                    </h5>
+                    <h1>{{ book.title }}</h1>
+                    <p>Рейтинг: {{ book.rating() }}</p>
+                    {% if book.description %}<p>{{ book.description }}</p>{% endif %}
+                    {% if  not current_user.is_anonymous %}
+                        <p>{{ book.favourited.count() }} человек(-а) добавило в избранное!</p>
+                        {% if not current_user.is_favourite(book) %}
+                            <p><a href="{{ url_for('add_favourite', ISBN=book.ISBN) }}">Добавить в "избранное"</a></p>
+                        {% else %}
+                            <p><a href="{{ url_for('remove_favourite', ISBN=book.ISBN) }}">Удалить из "избраного"</a></p>
+                        {% endif %}
+                        {% if current_user.type != 0 %}
+                            <p><a href="{{ url_for('edit_book', ISBN=book.ISBN) }}">Редактировать</a></p>
+                            <p><a href="{{ url_for('delete_book', ISBN=book.ISBN) }}">Удалить</a></p>
+                        {% endif %}
+                    {% endif %}
+
+                </td>
+            </tr>
+        </table>
+        <tr>
+            {% if book.edition.first() != None %}
+            <hr>
+            <table>
+            <h3>Издания</h3>
+                <div class="row">
+                    <div class="col-md-3">
+                        Издательство:
+                    </div>
+                    <div class="col-md-3">
+                        Язык:
+                    </div>
+                    <div class="col-md-3">
+                        Год издания:
+                    </div>
+                </div>
+                {% for edition in book.edition %}
+                <div class="row">
+                    <div class="col-md-3">
+                        <a href="{{ url_for('publisher', name=edition.publisher.name) }}">{{ edition.publisher.name }}</a>
+                    </div>
+                    <div class="col-md-3">
+                        {{ edition.language }}
+                    </div>
+                    <div class="col-md-3">
+                        {{ edition.year }}
+                    </div>
+                </div>
+                {% endfor %}
+                <br>
+            </table>
+            {% endif %}
+        </tr>
+        <hr>
+        <tr>
+            <h3>Отзывы</h3>
+            {% for feedback in book.feedback %}
+                <table>
+                    <tr class ="row" valign="top">
+                        <td><img src="{{ feedback.author.avatar(64) }}"></td>
+                        <td>Автор: <a href="{{ url_for('user', username=feedback.author.username) }}">{{ feedback.author.username }}</a>
+                            <br> Оценка: {{ feedback.rate }} <br>{% if current_user.type != 0 %} <a href="{{ url_for('remove_feedback', id=feedback.id, next=request.path) }}">Удалить</a> {% endif %}</td>
+                    </tr>
+                    <tr class ="row">
+                        <td>{{ feedback.timestamp.strftime('%d.%m.%Y - %H:%M:%S')}}</td>
+                    </tr>
+                    <tr class ="row" valign="top">
+                        <td>{{ feedback.body }}</td>
+                    </tr>
+                    <br>
+                </table>
+            {% endfor %}
+        </tr>
+        <tr>
+            <td>
+                {% if current_user.is_authenticated %}
+                    <form action="" method="post">
+                        {{ form.hidden_tag() }}
+                        <p>
+                            {{ form.body.label }}<br>
+                            {{ form.body(cols=50, rows=4) }}<br>
+                            {% for error in form.body.errors %}
+                            <span style="color: red;">[{{ error }}]</span>
+                            {% endfor %}
+                        </p>
+                        <p>
+                            {{ form.rate.label }}
+                            {% for subfield in form.rate %}
+                                    {{ subfield.label }} {{ subfield }}
+                            {% endfor %}
+                            {% for error in form.rate.errors %}
+                            <span style="color: red;">[{{ error }}]</span>
+                            {% endfor %}
+                        </p>
+                        <div class="control-group">
+                            <div class="controls">
+                                <input class="btn btn-primary" type="submit" value="Отправить">
+                            </div>
+                        </div>
+                    </form>
+                {% endif %}
+            </td>
+        </tr>
+    </tr>
+{% endblock %}

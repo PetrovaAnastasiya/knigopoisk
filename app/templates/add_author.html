@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+    <h1>Добавить автора</h1>
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.name.label }}<br>
+            {{ form.name(size=32) }}<br>
+            {% for error in form.name.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.image.label }}<br>
+            {{ form.image(cols=50, rows=4) }}<br>
+            {% for error in form.image.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.date_birth.label }}<br>
+            {{ form.date_birth }}<br>
+            {% for error in form.date_birth.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.date_death.label }}<br>
+            {{ form.date_death }}<br>
+            {% for error in form.date_death.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.country.label }}<br>
+            {{ form.country(size=32) }}<br>
+            {% for error in form.country.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.books.label }}<br>
+            {{ form.books(size=10, multiple="multiple") }}<br>
+            {% for error in form.books.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <div class="control-group">
+            <div class="controls">
+                <input class="btn btn-primary" type="submit" value="Отправить">
+            </div>
+        </div>
+        <script>
+        $('#books-select').multiSelect();
+        </script>
+    </form>
+{% endblock %}

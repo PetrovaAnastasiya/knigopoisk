@@ -1,0 +1,86 @@
+{% block title %}
+      {% if title %}
+      <title>{{ title }} - Книгопоиск</title>
+      {% else %}
+      <title>Книгопоиск</title>
+      {% endif %}
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+      <script type=text/javascript src="{{url_for('static', filename='js/jquery.js') }}"></script>
+      <script type=text/javascript src="{{url_for('static', filename='js/jquery.multi-select.js')}}"></script>
+      <script type=text/javascript src="{{url_for('static', filename='js/main.js')}}"></script>
+
+      <script src="{{url_for('static', filename='js/bootstrap.min.js')}}"></script>
+
+      <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+      <link rel="stylesheet" href="{{ url_for('static', filename='css/multi-select.css') }}">
+
+{% endblock %}
+
+{% block navbar %}
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+        <div class="container">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="{{ url_for('index') }}"> Книгопоиск:  </a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="{{ url_for('search') }}">Поиск</a>
+                     </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="{{ url_for('authors') }}">Авторы</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="{{ url_for('books') }}">Книги</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="{{ url_for('genres') }}">Жанры</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="{{ url_for('publishers') }}">Издатели</a>
+                    </li>
+                </ul>
+                <div class="nav navbar-nav" >
+                {% if current_user.is_anonymous %}
+                    <li class="nav-item active">
+                        <a class="nav-link" href="{{ url_for('login') }}">Войти</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item active">
+                        <a class="nav-link" href="{{ url_for('user', username=current_user.username) }}">Профиль</a>
+                    </li>
+                {% if current_user.type != 0 %}
+                    <li class="nav-item active">
+                        <a class="nav-link" href="{{ url_for('admin_panel') }}">Админ панель</a>
+                    </li>
+                {% endif %}
+                    <li class="nav-item active">
+                        <a class="nav-link" href="{{ url_for('logout') }}">Выйти</a>
+                    </li>
+                {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+{% endblock %}
+
+{% block content %}
+   <div class="container">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-info" role="alert">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        {# application content needs to be provided in the app_content block #}
+        {% block app_content %}{% endblock %}
+   </div>
+
+{% endblock %}

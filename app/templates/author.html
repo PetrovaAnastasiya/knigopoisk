@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+    <table>
+        <tr valign="top">
+            <td>
+                {% if author.image %}
+                    <img src="{{ author.image }}">
+                {% else %}
+                    <img src="https://i.ibb.co/5v6pGzj/i.png" alt="i" border="0">
+                {% endif %}
+            </td>
+            <td>
+                <h1>{{ author.name }}</h1>
+                <p>Страна: {{ author.country }}</p>
+                <p>Дата рождения: {{ author.date_birth }}</p>
+                {% if author.date_death %}<p>Дата смерти: {{ author.date_death }}</p>{% endif %}
+                <p>Рейтинг: {{ author.rating() }}</p>
+                {% if  not current_user.is_anonymous %}
+                    {% if current_user.type != 0 %}
+                        <p><a href="{{ url_for('edit_author', name=author.name) }}">Редактировать</a></p>
+                        <p><a href="{{ url_for('delete_author', name=author.name) }}">Удалить</a></p>
+                    {% endif %}
+                {% endif %}
+            </td>
+        </tr>
+    </table>
+    <hr>
+    <p>Книги автора: </p>
+    {% for book in author.books %}
+        {% include '_book.html' %}
+    {% endfor %}
+{% endblock %}

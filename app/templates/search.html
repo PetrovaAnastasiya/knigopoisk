@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <div class="row">
+            <div class="col-12">
+                <div id="custom-search-input">
+                    <div class="input-group">
+                        {{ form.body }}
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-primary btn-block">Искать</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    {% if book_result %}
+        <h6>Книги</h6>
+        {% for book in book_result %}
+            <p><a href="{{ url_for('book', ISBN=book.ISBN) }}">{{ book.title }}</a></p>
+        {% endfor %}
+    {% endif %}
+    {% if author_result %}
+        <h6>Авторы</h6>
+        {% for author in author_result %}
+            <p><a href="{{ url_for('author', name=author.name) }}">{{ author.name }}</a></p>
+        {% endfor %}
+    {% endif %}
+    {% if genre_result %}
+        <h6>Жанры</h6>
+        {% for genre in genre_result %}
+            <p><a href="{{ url_for('genre', name=genre.name) }}">{{ genre.name }}</a></p>
+        {% endfor %}
+    {% endif %}
+    {% if publisher_result %}
+        <h6>Издатели</h6>
+        {% for publisher in publisher_result %}
+            <p><a href="{{ url_for('publisher', name=publisher.name) }}">{{ publisher.name }}</a></p>
+        {% endfor %}
+    {% endif %}
+    {% if not book_result and not author_result and not genre_result and not publisher_result %}
+        <h6>Нет результатов по запросу</h6>
+    {% endif %}
+{% endblock %}
